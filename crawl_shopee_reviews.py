@@ -39,14 +39,15 @@ class Crawl_Shopee_Review:
                         shop_id=self.shop_id, item_id=self.item_id, offset=offset)
                 ).json()
                 for i, rating in enumerate(data["data"]["ratings"], 1):
-                    self.data.append([rating["author_username"],
-                                      rating["rating_star"], rating["comment"]])
+                    self.data.append([
+                        data['data']['ratings'][0]['original_item_info']['name'],rating["author_username"],
+                        rating["rating_star"], rating["comment"]])
         except Exception as ex:
             print(ex)
 
         if batch is False:
             df = pd.DataFrame(self.data, columns=[
-                              'username', 'rating', 'comment'])
+                              'product','username', 'rating', 'comment'])
             df.to_csv(f"{self.save_dir}/reviews.csv",
                       index=False, encoding="utf8")
 
@@ -55,7 +56,7 @@ class Crawl_Shopee_Review:
                 f'Your file was saved in {self.save_dir} with name is reviews.csv')
 
 
-crawler = Crawl_Shopee_Review(100, 'G:\Projects\chatgpt_selenium_automation')
+crawler = Crawl_Shopee_Review(100, '/Users/tuananh/Desktop/Dev/DL/Reviews_classification')
 urls = [
     "https://shopee.vn/S%E1%BB%AFa-ch%E1%BB%91ng-n%E1%BA%AFng-La-Roche-Posay-Anthelios-UVMUNE400-Oil-Control-Fluid-50ml-i.37251700.21181809304?xptdk=ee6e0979-8aef-472f-bc34-7649bbee5ecf",
     "https://shopee.vn/Kem-n%E1%BB%81n-BB-FOCALLURE-31g-trang-%C4%91i%E1%BB%83m-khu%C3%B4n-m%E1%BA%B7t-che-khuy%E1%BA%BFt-%C4%91i%E1%BB%83m-ti%E1%BB%87n-l%E1%BB%A3i-i.182631756.3114622455?xptdk=6f2dfb7c-5ec7-4de0-8488-8ba41fa7b35c",
@@ -77,5 +78,5 @@ urls = [
     "https://shopee.vn/B%E1%BB%99-2-S%E1%BB%AFa-ch%E1%BB%91ng-n%E1%BA%AFng-d%E1%BB%8Bu-nh%E1%BA%B9-cho-da-nh%E1%BA%A1y-c%E1%BA%A3m-v%C3%A0-tr%E1%BA%BB-em-SPF-50-PA-60mlx2-i.58411241.8273131355",
     "https://shopee.vn/(New)-Son-Tint-B%C3%B3ng-Romand-Glasting-Color-GLOSS-c%C4%83ng-m%E1%BB%8Dng-m%C3%B4i-i.58282982.25304540160?sp_atk=8c1257db-a909-4bad-ae00-cae5a5f8f234&xptdk=8c1257db-a909-4bad-ae00-cae5a5f8f234",
     "https://shopee.vn/B%C3%BAt-k%E1%BA%BB-m%E1%BA%AFt-Pinkflash-d%E1%BA%A1ng-l%E1%BB%8Fng-nhanh-kh%C3%B4-m%C3%A0u-%C4%91en-m%C3%A0u-n%C3%A2u-ch%E1%BA%A5t-l%C3%AC-ch%E1%BB%91ng-n%C6%B0%E1%BB%9Bc-l%C3%A2u-tr%C3%B4i-30g-i.299282693.5151439378?publish_id=&sp_atk=8718aeaf-2edf-41ca-98d0-9de781f9ba8a&xptdk=8718aeaf-2edf-41ca-98d0-9de781f9ba8a"]
-crawler.get_data_from_urls(urls)
+crawler.get_data_from_url(urls[0])
 
