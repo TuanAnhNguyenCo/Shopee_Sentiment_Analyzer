@@ -1,33 +1,33 @@
-mng, mọi người 
-mn, mọi người 
-Rcm, recommend
-sd, sử dụng
-dcc, được
-bt, biết
-ko, không
-mik, mình
-dungd, dùng
-sop, shop
-ckđ, che khuyết điểm
-vd, ví dụ
-ng, người
-Tp.HCM, thành phố Hồ Chí Minh
-HN, Hà Nội
+mng,mọi người 
+mn,mọi người 
+Rcm,recommend
+sd,sử dụng
+dcc,được
+bt,biết
+ko,không
+mik,mình
+dungd,dùng
+sop,shop
+ckđ,che khuyết điểm
+vd,ví dụ
+ng,người
+Tp.HCM,thành phố Hồ Chí Minh
+HN,Hà Nội
 kkkk
-ms, mới
-cx, cũng
-m5, 1 mét 5 
-ntn, như thế nào
-òi, rồi
-fb, facebook
-nma, nhưng mà
-kh, không
-A/e, anh em
-tr, trời
-chx, chưa
-mk, mình
-nhma, nhưng mà
-mngg, mọi người
+ms,mới
+cx,cũng
+m5,1 mét 5 
+ntn,như thế nào
+òi,rồi
+fb,facebook
+nma,nhưng mà
+kh,không
+A/e,anh em
+tr,trời
+chx,chưa
+mk,mình
+nhma,nhưng mà
+mngg,mọi người
 ɧ
 ɳ
 ɠ
@@ -39,17 +39,17 @@ mngg, mọi người
 ⱪ
 ɽ
 ɗ
-Hqa, hôm qua
-hỉu, hiểu
-nchung, nói chung
-hok, không
-tgian, thời gian
-đg, đang 
-cb, chuẩn bị
+Hqa,hôm qua
+hỉu,hiểu
+nchung,nói chung
+hok,không
+tgian,thời gian
+đg,đang 
+cb,chuẩn bị
 sh
 z
-tuỵt, tuyệt 
-hdsd, hướng dẫn sử dụng
-ngiu, người yêu
-nt, nhắn tin 
-tv, thành viên
+tuỵt,tuyệt 
+hdsd,hướng dẫn sử dụng
+ngiu,người yêu
+nt,nhắn tin 
+tv,thành viên

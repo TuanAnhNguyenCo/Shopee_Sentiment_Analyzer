@@ -23,4 +23,4 @@ def merge_files(folder_path,file_name):
 
     print(f"Các tệp CSV trong {folder_path} đã được ghép thành công thành một tệp duy nhất.")
 
-merge_files("./RawRating/",'reviews')
+merge_files("./FilteredReviews/",'raw_reviews')
