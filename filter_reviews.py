@@ -33,4 +33,4 @@ random.shuffle(filtered_files)
 name = ['hoangnb','anhnct','hoangpv','hanhnth','anhpt','thunt']
 for idx,n in enumerate(name):
     print(len(filtered_files[idx*400:(idx+1)*400]) )
-    pd.DataFrame(filtered_files[idx*400:(idx+1)*400],columns = ['author','rating','comment']).to_csv(f"FilteredReviews/{n}.csv",index = False)
+    pd.DataFrame(filtered_files[idx*400:(idx+1)*400],columns = ['product','author','rating','comment']).to_csv(f"FilteredReviews/{n}.csv",index = False)
