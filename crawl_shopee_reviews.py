@@ -3,13 +3,14 @@ import json
 import requests
 import pandas as pd
 from tqdm.auto import tqdm
-
+from clean_data import CleanData
 
 class Crawl_Shopee_Review:
     def __init__(self, max_reviews_per_product=400, save_dir=''):
         self.data = []
         self.max_reviews_per_product = max_reviews_per_product
         self.save_dir = save_dir
+        self.clean = CleanData()
 
     def get_rating_urls(self, url):
         r = re.search(r"i\.(\d+)\.(\d+)", url)
@@ -42,8 +43,10 @@ class Crawl_Shopee_Review:
                 ).json()
                 for i, rating in enumerate(data["data"]["ratings"], 1):
                     self.data.append([
-                        data['data']['ratings'][0]['original_item_info']['name'], rating["author_username"],
-                        rating["rating_star"], rating["comment"]])
+                        self.clean_text(data['data']['ratings'][0]['original_item_info']['name']),
+                        rating["author_username"],
+                        rating["rating_star"], 
+                        self.clean_text(rating["comment"])])
         except Exception as ex:
             print(ex)
 
