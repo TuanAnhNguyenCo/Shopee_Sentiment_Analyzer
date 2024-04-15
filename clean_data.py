@@ -19,7 +19,7 @@ class CleanData:
 
     def remove_replace_abbreviation_words(self,text):
         text = text.lower().strip() # remove space
-        with open(self.abbreviation_words_file_url,'r') as f:
+        with open(self.abbreviation_words_file_url,'r', encoding="utf-8") as f:
             lines = f.readlines()
         for line in lines:
             words = line.split(',')

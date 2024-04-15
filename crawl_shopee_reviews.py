@@ -10,13 +10,12 @@ class Crawl_Shopee_Review:
         self.data = []
         self.max_reviews_per_product = max_reviews_per_product
         self.save_dir = save_dir
-        self.clean = CleanData()
+        self.clean = CleanData(abbreviation_words_file_url = 'specialchar.txt',save_dir = './')
 
     def get_rating_urls(self, url):
         r = re.search(r"i\.(\d+)\.(\d+)", url)
         self.shop_id, self.item_id = r[1], r[2]
         self.ratings_url = "https://shopee.vn/api/v2/item/get_ratings?filter=0&flag=1&itemid={item_id}&limit=20&offset={offset}&shopid={shop_id}&type=0"
-        print(self.ratings_url)
 
     def get_data_from_urls(self, urls):
         assert type(urls) is list
@@ -43,10 +42,10 @@ class Crawl_Shopee_Review:
                 ).json()
                 for i, rating in enumerate(data["data"]["ratings"], 1):
                     self.data.append([
-                        self.clean_text(data['data']['ratings'][0]['original_item_info']['name']),
+                        self.clean.clean_text(data['data']['ratings'][0]['original_item_info']['name']),
                         rating["author_username"],
                         rating["rating_star"], 
-                        self.clean_text(rating["comment"])])
+                        self.clean.clean_text(rating["comment"])])
         except Exception as ex:
             print(ex)
 
