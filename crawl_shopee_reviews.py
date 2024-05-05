@@ -83,6 +83,6 @@ class Crawl_Shopee_Review:
 
 
 crawler = Crawl_Shopee_Review(
-    100, 'G:\Projects\Reviews_classification\RawRating')
+    40, './')
 urls = ["https://shopee.vn/%C3%81o-croptop-m%C3%A0u-%C4%91en-%C3%A1o-crt-thun-n%E1%BB%AF-ki%E1%BB%83u-ph%E1%BB%91i-c%E1%BB%95-s%C6%A1-mi-tr%E1%BA%AFng-%C3%B4m-body-tay-d%C3%A0i-sexy-c%C3%A1-t%C3%ADnh-%C4%91%E1%BA%B9p-ng%E1%BA%A7u-gi%C3%A1-r%E1%BA%BB-i.39682649.11424337247?sp_atk=1ba4155e-a5e7-45fe-bbe4-ed846c81e7aa&xptdk=1ba4155e-a5e7-45fe-bbe4-ed846c81e7aa"]
 crawler.get_data_from_urls(urls)

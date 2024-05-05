@@ -1,8 +1,9 @@
 import json
 import pandas as pd
 import requests
+from tqdm.auto import tqdm 
 
-data = pd.read_csv('RawRating/reviews.csv')
+data = pd.read_csv('reviews.csv')
 data = data.dropna()
 form = []
 
@@ -10,7 +11,7 @@ form = []
 url = 'http://222.252.4.232:9999/classify_reviews' 
 
 
-for idx,row in data.iterrows():
+for idx,row in tqdm(data.iterrows()):
     data = {
         'text': row['comment']
     }
