@@ -107,7 +107,7 @@ class ChatGPTAutomation:
         """ :return: the text of the last chatgpt response """
 
         response_elements = self.driver.find_elements(
-            by=By.CSS_SELECTOR, value='div.text-base')
+            by=By.CSS_SELECTOR, value='div.markdown.prose.w-full.break-words.dark\:prose-invert.dark p')
         return response_elements[-1].text
 
     @staticmethod
