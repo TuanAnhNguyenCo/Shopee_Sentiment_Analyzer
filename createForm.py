@@ -34,5 +34,5 @@ for idx,row in tqdm(data.iterrows()):
     })
  
 
-with open("data_form_pta.json", "w",encoding="utf-8") as outfile:
+with open("anhnct.json", "w",encoding="utf-8") as outfile:
     json.dump(form, outfile,ensure_ascii=False)
