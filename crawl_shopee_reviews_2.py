@@ -57,18 +57,32 @@ class Crawl_Shopee_Review:
         self.ratings_url = None
         self.get_rating_urls(url)
         assert self.ratings_url is not None
+        good_rating = 0
+        bad_rating = 0
         try:
             for offset in tqdm(range(20, self.max_reviews_per_product+1, 20)):
                 data = requests.get(
                     self.ratings_url.format(
                         shop_id=self.shop_id, item_id=self.item_id, offset=offset), headers=headers).json()
                 for i, rating in enumerate(data["data"]["ratings"], 1):
-                    self.data.append([
-                        self.clean.clean_text(
-                            data['data']['ratings'][0]['original_item_info']['name']),
-                        rating["author_username"],
-                        rating["rating_star"],
-                        self.clean.clean_text(rating["comment"])])
+                    if rating["rating_star"] >= 4 and good_rating < 20:
+                        good_rating += 1
+                        self.data.append([
+                            self.clean.clean_text(
+                                data['data']['ratings'][0]['original_item_info']['name']),
+                            rating["author_username"],
+                            rating["rating_star"],
+                            self.clean.clean_text(rating["comment"])])
+                    if rating["rating_star"] < 3 and bad_rating < 20:
+                        bad_rating += 1
+                        self.data.append([
+                            self.clean.clean_text(
+                                data['data']['ratings'][0]['original_item_info']['name']),
+                            rating["author_username"],
+                            rating["rating_star"],
+                            self.clean.clean_text(rating["comment"])])
+                    if good_rating == 20 and bad_rating == 20:
+                        break
         except Exception as ex:
             print(ex)
 
@@ -84,7 +98,7 @@ class Crawl_Shopee_Review:
 
 
 crawler = Crawl_Shopee_Review(
-    40, 'G:\Projects\Reviews_classification\RawRating')
+    400, 'G:\Projects\Reviews_classification\RawRating')
 urls = ["https://shopee.vn/%C4%90%C3%A8n-Tr%E1%BB%A3-S%C3%A1ng-xe-ma%CC%81y-xe-%C4%91i%E1%BB%87n-%C4%91%C3%A8n-bi-c%E1%BA%A7u-mini-bi-C%E1%BA%A7u-%C4%91e%CC%80n-pha-bi-ca%CC%82%CC%80u-xe-ma%CC%81y-2-M%C3%A0u-Cos-v%C3%A0ng-Pha-tr%E1%BA%AFng-i.229294463.22962381648?sp_atk=b41f1c2b-28fe-4fb7-9fbc-ffbaa0621b0a&xptdk=b41f1c2b-28fe-4fb7-9fbc-ffbaa0621b0a",
         "https://shopee.vn/%C4%90%C3%A8n-tr%E1%BB%A3-s%C3%A1ng-l4-Ng%E1%BA%AFn.-t%E1%BA%B7ng-k%C3%A8m-c%C3%B4ng-t%E1%BA%AFc-%E1%BB%91c-g%C6%B0%C6%A1ng-i.82786224.7574853946?sp_atk=5c7cb885-ef3f-4f5d-9c09-eb26cb9c304a&xptdk=5c7cb885-ef3f-4f5d-9c09-eb26cb9c304a",
         "https://shopee.vn/%C4%90%C3%A8n-LED-Xi-nhan-%C4%90%C3%A8n-L%C3%B9i-Ch%C3%A2n-T15-T10-Cho-%C3%94-t%C3%B4-Xe-m%C3%A1y-Ch%C3%ADp-4014-Si%C3%AAu-s%C3%A1ng-15w-i.125611244.19022657474?sp_atk=45b34bdb-2bb6-4738-a6b9-645e4f638204&xptdk=45b34bdb-2bb6-4738-a6b9-645e4f638204",
