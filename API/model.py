@@ -25,9 +25,14 @@ class ReviewsClassificationInference:
         }
         self.device = device
     def __call__(self, comment):
-        comment = comment.lower().replace("\n",' ').replace('\r'," ")
-        comment = self.tokenizer(comment, return_tensors="pt")
+        comment = comment.split('-----')
+        if isinstance(comment,list):
+            comment = [cm.lower().replace("\n",' ').replace('\r'," ") for cm in comment]
+        else:
+            comment = comment.lower().replace("\n",' ').replace('\r'," ")
+        comment = self.tokenizer(comment, return_tensors="pt",padding = True, truncation = True,max_length = 100)
         comment = {key:value.to(self.device) for key,value in comment.items()}
-        output = self.model(comment).argmax(dim = -1).item()
-        
-        return self.idx_to_class[output]
+        output = self.model(comment).argmax(dim = -1).cpu().squeeze(0).numpy().tolist()
+        if isinstance(output,int):
+            return self.idx_to_class[output]
+        return '-----'.join([self.idx_to_class[pd] for pd in output])

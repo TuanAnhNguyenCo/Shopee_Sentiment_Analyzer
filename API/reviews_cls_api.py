@@ -16,4 +16,4 @@ def root():
 @app.post("/classify_reviews/")
 async def transform_text_to_speech(text: str):
     output = pipeline(text)
-    return {'message': f'{output}'}
+    return {'message': output}
