@@ -29,6 +29,7 @@ headers = {
 }
 
 
+
 class Reviews_CLS_System:
     def __init__(self,api = 'http://222.252.4.232:9999/classify_reviews' ):
         self.clean = CleanData(
@@ -38,7 +39,7 @@ class Reviews_CLS_System:
     def get_rating_urls(self, url):
         r = re.search(r"i\.(\d+)\.(\d+)", url)
         self.shop_id, self.item_id = r[1], r[2]
-        self.ratings_url = "https://shopee.vn/api/v4/item/get_ratings?filter=0&flag=1&itemid={item_id}&limit=20&offset={offset}&shopid={shop_id}&type=0"
+        self.ratings_url = "https://shopee.vn/api/v4/item/get_ratings?filter=0&flag=6&itemid={item_id}&limit=59&offset={offset}&shopid={shop_id}&type=0"
 
     def get_data_and_predict_from_url(self, url):
         self.data = []
@@ -48,26 +49,52 @@ class Reviews_CLS_System:
         negative = 0
         total = 0
         cmts = []
+        comments = []
+        i = 0
 
+
+        def check_exist(comment):
+            for obj in cmts:
+                if obj == comment:
+                    return True
+            return False
+        
         assert self.ratings_url is not None
         try:
-            for offset in tqdm(range(20,100000,20)): # max 100000 comments
+            data = requests.get(
+                    self.ratings_url.format(
+                        shop_id=self.shop_id, item_id=self.item_id, offset="1"), headers=headers).json()
+            max_offsetId = int(data["data"]["item_rating_summary"]["rcount_with_context"]/59)
+            print(max_offsetId)
+            for offset in tqdm(range(0,max_offsetId+1)): # max max_offsetId*59 comments
                 data = requests.get(
                     self.ratings_url.format(
-                        shop_id=self.shop_id, item_id=self.item_id, offset=offset), headers=headers).json()
+                        shop_id=self.shop_id, item_id=self.item_id, offset=offset*59), headers=headers).json()
                 for i, rating in enumerate(data["data"]["ratings"], 1):
                     if rating["comment"] == "" :
+                        i+=1
                         continue
-                    comment = self.clean.clean_text(rating["comment"])
-                    cmts.append(comment)
+                    comment = self.clean.clean_text(rating["comment"]) 
+                    if not check_exist(comment):
+                        comments.append([
+                            self.clean.clean_text(
+                                data['data']['ratings'][0]['original_item_info']['name']),
+                            rating["author_username"],
+                            rating["rating_star"],
+                            self.clean.clean_text(rating["comment"])])
+                        cmts.append(comment)
         
         except Exception as ex:
             pass
         print('*'*15,"CRAWLING REVIEWS: DONE!",'*'*15)
         print('*'*15,"PREDICTING REVIEWS: STARTING!",'*'*15)
+        print(i)
         if len(cmts) != 0 :
             bs = 16
             total = len(cmts)
+            j = 0
+            posi_cmt = []
+            nega_cmt = []
             for index in range(0,len(cmts),bs):
                 sys.stdout.write(f"\rProgress: {min(index+16,total)}/{total}")
                 sys.stdout.flush()
@@ -79,11 +106,20 @@ class Reviews_CLS_System:
                 output = response.json()['message'].split('-----')
                 for o in output:
                     if o == 'positive':
+                        posi_cmt.append(comments[j])
                         positive +=1
                     elif o == 'negative':
+                        nega_cmt.append(comments[j])
                         negative += 1
-            
-
+                    j+=1
+            df = pd.DataFrame(posi_cmt, columns=[
+                              'product', 'username', 'rating', 'comment'])
+            df.to_csv(f"./positive.csv",
+                      index=False, encoding="utf8")
+            df = pd.DataFrame(nega_cmt, columns=[
+                              'product', 'username', 'rating', 'comment'])
+            df.to_csv(f"./negative.csv",
+                      index=False, encoding="utf8")
         return positive,negative,total
         
     def __call__(self,url):
@@ -101,4 +137,4 @@ class Reviews_CLS_System:
 
 
 pipeline = Reviews_CLS_System(api = 'http://222.252.4.232:9999/classify_reviews')
-pipeline('https://shopee.vn/%C4%90%E1%BB%93ng-H%E1%BB%93-%C4%90eo-Tay-Th%E1%BB%9Di-Trang-M%E1%BA%B7t-S%E1%BB%91-%E1%BA%A2-R%E1%BA%ADp-D%C3%A0nh-Cho-N%E1%BB%AF-i.1006220775.24504892554?publish_id=&sp_atk=58e741c7-4234-41d2-93ba-37c3397f04d0&xptdk=58e741c7-4234-41d2-93ba-37c3397f04d0')
+pipeline('https://shopee.vn/%C3%81o-Ph%C3%B4ng-n%E1%BB%AF-ph%E1%BB%91i-Tay-K%E1%BA%BB-Unisex-Cotton-from-r%E1%BB%99ng-%C4%91%E1%BA%B9p-tho%E1%BA%A3i-m%C3%A1i-tr%E1%BA%BB-trung-i.885073589.22426271001?sp_atk=c012fd3d-650e-468d-afa5-fb47c8fe3bef&xptdk=c012fd3d-650e-468d-afa5-fb47c8fe3bef')
