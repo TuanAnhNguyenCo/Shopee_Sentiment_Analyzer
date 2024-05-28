@@ -6,6 +6,7 @@ from tqdm.auto import tqdm
 from clean_data import CleanData
 import requests
 import sys
+from model.model import ReviewsClassificationInference
 
 # khi chạy code cần login shopee lấy cookies thay vào phần cookie
 # truy cập link https://shopee.vn/api/v2/item/get_ratings?filter=0&flag=1&itemid=11424337247&limit=20&offset=0&shopid=39682649&type=0
@@ -31,10 +32,12 @@ headers = {
 
 
 class Reviews_CLS_System:
-    def __init__(self,api = 'http://222.252.4.232:9999/classify_reviews' ):
+    def __init__(self,device = 'cuda:1',bs = 16):
+        self.bs = bs
         self.clean = CleanData(
             abbreviation_words_file_url='specialchar.txt', save_dir='./')
-        self.api = api
+        
+        self.pipeline = ReviewsClassificationInference(device)
 
     def get_rating_urls(self, url):
         r = re.search(r"i\.(\d+)\.(\d+)", url)
@@ -51,6 +54,8 @@ class Reviews_CLS_System:
         cmts = []
         comments = []
         i = 0
+        raw_reviews = []
+        product_name = None
 
 
         def check_exist(comment):
@@ -65,7 +70,7 @@ class Reviews_CLS_System:
                     self.ratings_url.format(
                         shop_id=self.shop_id, item_id=self.item_id, offset="1"), headers=headers).json()
             max_offsetId = int(data["data"]["item_rating_summary"]["rcount_with_context"]/59)
-            print(max_offsetId)
+    
             for offset in tqdm(range(0,max_offsetId+1)): # max max_offsetId*59 comments
                 data = requests.get(
                     self.ratings_url.format(
@@ -76,6 +81,8 @@ class Reviews_CLS_System:
                         continue
                     comment = self.clean.clean_text(rating["comment"]) 
                     if not check_exist(comment):
+                        raw_reviews.append(rating["comment"])
+                        product_name = data['data']['ratings'][0]['original_item_info']['name']
                         comments.append([
                             self.clean.clean_text(
                                 data['data']['ratings'][0]['original_item_info']['name']),
@@ -83,58 +90,60 @@ class Reviews_CLS_System:
                             rating["rating_star"],
                             self.clean.clean_text(rating["comment"])])
                         cmts.append(comment)
+                        
         
         except Exception as ex:
             pass
         print('*'*15,"CRAWLING REVIEWS: DONE!",'*'*15)
         print('*'*15,"PREDICTING REVIEWS: STARTING!",'*'*15)
         print(i)
+        detail_info= []
         if len(cmts) != 0 :
-            bs = 16
+            bs = self.bs
             total = len(cmts)
             j = 0
             posi_cmt = []
             nega_cmt = []
             for index in range(0,len(cmts),bs):
-                sys.stdout.write(f"\rProgress: {min(index+16,total)}/{total}")
+                sys.stdout.write(f"\rProgress: {min(index+bs,total)}/{total}")
                 sys.stdout.flush()
-                data = {
-                    'text': '-----'.join(cmts[index:index+bs])
-                }
-                response = requests.post(self.api,params = data)
+                
+                results = self.pipeline(comment =  cmts[index:index+bs])
                 label = 0
-                output = response.json()['message'].split('-----')
-                for o in output:
+                for o in results:
                     if o == 'positive':
                         posi_cmt.append(comments[j])
                         positive +=1
+                        detail_info.append(1)
                     elif o == 'negative':
                         nega_cmt.append(comments[j])
                         negative += 1
+                        detail_info.append(0)
                     j+=1
-            df = pd.DataFrame(posi_cmt, columns=[
-                              'product', 'username', 'rating', 'comment'])
-            df.to_csv(f"./positive.csv",
-                      index=False, encoding="utf8")
-            df = pd.DataFrame(nega_cmt, columns=[
-                              'product', 'username', 'rating', 'comment'])
-            df.to_csv(f"./negative.csv",
-                      index=False, encoding="utf8")
-        return positive,negative,total
+
+            # df = pd.DataFrame(posi_cmt, columns=[
+            #                 'product', 'username', 'rating', 'comment'])
+            # df.to_csv(f"./positive.csv",
+            #         index=False, encoding="utf8")
+            # df = pd.DataFrame(nega_cmt, columns=[
+            #         'product', 'username', 'rating', 'comment'])
+            # df.to_csv(f"./negative.csv",
+            #         index=False, encoding="utf8")
+        return positive,negative,total,detail_info,raw_reviews,product_name
         
     def __call__(self,url):
-        positive,negative,total = self.get_data_and_predict_from_url(url)
-        print()
-        print('*'*15,"STATISTICS",'*'*15)
-        print("NUM POSITIVE:",positive)
-        print("NUM NEGATIVE:",negative)
-        print("TOTAL:",total)
-        if total != 0:
-            print("POSITIVE/TOTAL",positive/total)
-            print("NEGATIVE/TOTAL",negative/total)
-        print('*'*15,"END",'*'*15)
-        print()
+        positive,negative,total,detail_info,raw_reviews,product_name = self.get_data_and_predict_from_url(url)
+        
+        return {
+            'positive':positive,
+            'negative':negative,
+            'total':total,
+            'detail_info':detail_info,
+            'raw_reviews':raw_reviews,
+            'product_name':product_name
+        }
 
 
-pipeline = Reviews_CLS_System(api = 'http://222.252.4.232:9999/classify_reviews')
-pipeline('https://shopee.vn/%C3%81o-Ph%C3%B4ng-n%E1%BB%AF-ph%E1%BB%91i-Tay-K%E1%BA%BB-Unisex-Cotton-from-r%E1%BB%99ng-%C4%91%E1%BA%B9p-tho%E1%BA%A3i-m%C3%A1i-tr%E1%BA%BB-trung-i.885073589.22426271001?sp_atk=c012fd3d-650e-468d-afa5-fb47c8fe3bef&xptdk=c012fd3d-650e-468d-afa5-fb47c8fe3bef')
+pipeline = Reviews_CLS_System()
+# pipeline('https://shopee.vn/%C3%81o-Ph%C3%B4ng-n%E1%BB%AF-ph%E1%BB%91i-Tay-K%E1%BA%BB-Unisex-Cotton-from-r%E1%BB%99ng-%C4%91%E1%BA%B9p-tho%E1%BA%A3i-m%C3%A1i-tr%E1%BA%BB-trung-i.885073589.22426271001?sp_atk=c012fd3d-650e-468d-afa5-fb47c8fe3bef&xptdk=c012fd3d-650e-468d-afa5-fb47c8fe3bef')
+

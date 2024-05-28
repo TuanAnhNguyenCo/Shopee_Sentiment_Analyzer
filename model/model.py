@@ -25,7 +25,7 @@ class ReviewsClassificationInference:
         }
         self.device = device
     def __call__(self, comment):
-        comment = comment.split('-----')
+        
         if isinstance(comment,list):
             comment = [cm.lower().replace("\n",' ').replace('\r'," ") for cm in comment]
         else:
@@ -35,4 +35,4 @@ class ReviewsClassificationInference:
         output = self.model(comment).argmax(dim = -1).cpu().squeeze(0).numpy().tolist()
         if isinstance(output,int):
             return self.idx_to_class[output]
-        return '-----'.join([self.idx_to_class[pd] for pd in output])
+        return [self.idx_to_class[pd] for pd in output]
