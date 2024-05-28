@@ -138,8 +138,8 @@ class Reviews_CLS_System:
             'positive':positive,
             'negative':negative,
             'total':total,
-            'detail_info':detail_info,
-            'raw_reviews':raw_reviews,
+            # 'detail_info':detail_info,
+            # 'raw_reviews':raw_reviews,
             'product_name':product_name
         }
 
