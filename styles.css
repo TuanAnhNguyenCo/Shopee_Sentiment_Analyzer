@@ -94,3 +94,122 @@ main {
     transform: rotate(360deg);
   }
 }
+
+#character {
+  width: 100px;
+  height: 100px;
+  background-image: url("https://example.com/your-anime-character.png"); /* Thay đổi URL đến hình ảnh nhân vật của bạn */
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+:root {
+  --back-ground-color: #fc5c31;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--back-ground-color);
+  width: 100%;
+  padding: 10px 20px;
+  color: white;
+}
+
+#logo {
+  height: 50px;
+  margin-right: 20px;
+}
+
+h1 {
+  margin: 0;
+}
+
+main {
+  margin-top: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.container {
+  text-align: center;
+}
+
+#urlInput {
+  width: 300px;
+  padding: 10px;
+  margin-right: 10px;
+}
+
+#submitBtn {
+  padding: 10px 20px;
+  background-color: var(--back-ground-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+#submitBtn:hover {
+  background-color: var(--back-ground-color);
+}
+
+#submitBtn:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+#result {
+  margin-top: 20px;
+  font-size: 16px;
+}
+
+.positive {
+  color: green;
+}
+
+.negative {
+  color: red;
+}
+
+#spinner {
+  margin: auto;
+  margin-top: 20px;
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+#character {
+  width: 100px;
+  height: 100px;
+  background-image: url("https://example.com/your-anime-character.png"); /* Thay đổi URL đến hình ảnh nhân vật của bạn */
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
