@@ -32,12 +32,12 @@ headers = {
 
 
 class Reviews_CLS_System:
-    def __init__(self,device = 'cuda:1',bs = 16):
+    def __init__(self,device = 'cuda:1',device1 = 'cuda:0',device2 = 'cuda:1',bs = 4):
         self.bs = bs
         self.clean = CleanData(
             abbreviation_words_file_url='specialchar.txt', save_dir='./')
         
-        self.pipeline = ReviewsClassificationInference(device)
+        self.pipeline = ReviewsClassificationInference(device,device1,device2)
 
     def get_rating_urls(self, url):
         r = re.search(r"i\.(\d+)\.(\d+)", url)
