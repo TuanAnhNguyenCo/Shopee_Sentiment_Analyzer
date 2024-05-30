@@ -41,16 +41,22 @@ document
       document.getElementById("aspect-result").style.display = "grid";
     }
   });
+
+
+
 document.getElementById("submitBtn").addEventListener("click", function () {
   const url = document.getElementById("urlInput").value;
   const aspect = document.getElementById("aspect").checked;
   if (url) {
     document.getElementById("loading").style.display = "block"; // Show the loading animation
     document.getElementById("show-aspect-result").style.display = "none";
-    fetch("http://222.252.4.232:9999/reviews_classification", {
+    
+    // fetch("http://222.252.4.232:9999/reviews_classification", {
+    fetch("https://sole-becoming-collie.ngrok-free.app/reviews_classification", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "ngrok-skip-browser-warning": true,
       },
       body: JSON.stringify({ url: url, aspect_analysis: aspect }),
     })

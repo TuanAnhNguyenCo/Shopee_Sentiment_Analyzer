@@ -38,7 +38,6 @@ class Reviews_CLS_System:
         self.bs = bs
         self.clean = CleanData(
             abbreviation_words_file_url='specialchar.txt', save_dir='./')
-        
         self.pipeline = ReviewsClassificationInference(device,device1,device2)
 
     def get_rating_urls(self, url):
