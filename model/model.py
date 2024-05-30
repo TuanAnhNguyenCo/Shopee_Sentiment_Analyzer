@@ -133,9 +133,14 @@ class ReviewsClassificationInference:
             word = self.tokenizer.tokenize(word)
             tag.extend([idx+1]*len(word))
             words.extend(self.tokenizer.convert_tokens_to_ids(word))
-        tag = torch.tensor(tag)
+        tag = torch.tensor(tag)[:512] # max 512 tokens
+        words = words[:512] # max 512 tokens
+        if len(words) == 0: # if sentence is "" return []
+            return []
         with torch.no_grad():
             outputs = self.aspect_extraction_model(torch.tensor(words).unsqueeze(dim = 0).to(self.device1), None)
+            
+                
             predictions = outputs.permute(0,2,1).argmax(dim = -1).cpu()
             
 

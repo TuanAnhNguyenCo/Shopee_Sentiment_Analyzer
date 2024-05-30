@@ -6,4 +6,4 @@
 
 # Run model api
 - cd API
-- gunicorn reviews_cls_api:app --bind 0.0.0.0:9992 --worker-class uvicorn.workers.UvicornWorker --timeout 300
+- gunicorn reviews_cls_api:app --bind 0.0.0.0:9999 --worker-class uvicorn.workers.UvicornWorker --timeout 300
