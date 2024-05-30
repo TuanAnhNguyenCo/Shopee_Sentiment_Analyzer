@@ -58,6 +58,7 @@ class ReviewsClassificationInference:
         self.aspect_extraction_model.eval()
         
         self.aspect_sentiment_analysis_model = ABSABert.from_pretrained('NCTuanAnh/Aspect_Based_Sentiment_Analysis_for_Reviews').to(device2)
+        self.aspect_sentiment_analysis_model.eval()
         self.device = device
         self.device1 = device1
         self.device2 = device2
@@ -77,12 +78,14 @@ class ReviewsClassificationInference:
                 if len(asp) != 0:
                     aspect.extend(asp)
                     reviews.extend([cm]*len(asp))
-            sentiment = self.__analyse_aspect_sentiment__(aspect,reviews)
-            aspect = [[asp,stm] for asp,stm in zip(aspect,sentiment)]
+            if aspect != []:
+                sentiment = self.__analyse_aspect_sentiment__(aspect,reviews)
+                aspect = [[asp,stm] for asp,stm in zip(aspect,sentiment)]
         
         reviews_cls = self.__classify_reviews__(comment)
         
-        return reviews_cls,
+        
+        return reviews_cls,aspect
             
             
     
@@ -92,7 +95,7 @@ class ReviewsClassificationInference:
         with torch.no_grad():
             output = self.model(comment).argmax(dim = -1).cpu().squeeze(0).numpy().tolist()
         if isinstance(output,int):
-            return self.idx_to_class[output]
+            return [self.idx_to_class[output]]
         return [self.idx_to_class[pd] for pd in output]
 
     def __analyse_aspect_sentiment__(self,aspect,reviews):
@@ -103,7 +106,7 @@ class ReviewsClassificationInference:
         with torch.no_grad():
             output = self.aspect_sentiment_analysis_model(text_inputs,aspect_inputs).argmax(dim = -1).cpu().squeeze(0).numpy().tolist()
         if isinstance(output,int):
-            return self.idx_to_class[output]
+            return [self.idx_to_class[output]]
         return [self.idx_to_class[pd] for pd in output]
     
     def __extract_aspect__(self,comment):

@@ -7,6 +7,7 @@ from clean_data import CleanData
 import requests
 import sys
 from model.model import ReviewsClassificationInference
+from collections import defaultdict 
 
 # khi chạy code cần login shopee lấy cookies thay vào phần cookie
 # truy cập link https://shopee.vn/api/v2/item/get_ratings?filter=0&flag=1&itemid=11424337247&limit=20&offset=0&shopid=39682649&type=0
@@ -44,7 +45,7 @@ class Reviews_CLS_System:
         self.shop_id, self.item_id = r[1], r[2]
         self.ratings_url = "https://shopee.vn/api/v4/item/get_ratings?filter=0&flag=6&itemid={item_id}&limit=59&offset={offset}&shopid={shop_id}&type=0"
 
-    def get_data_and_predict_from_url(self, url):
+    def get_data_and_predict_from_url(self, url,aspect_analysis):
         self.data = []
         self.ratings_url = None
         self.get_rating_urls(url)
@@ -98,6 +99,7 @@ class Reviews_CLS_System:
         print('*'*15,"PREDICTING REVIEWS: STARTING!",'*'*15)
         print(i)
         detail_info= []
+        aspects = defaultdict(lambda: [0,0]) 
         if len(cmts) != 0 :
             bs = self.bs
             total = len(cmts)
@@ -108,7 +110,13 @@ class Reviews_CLS_System:
                 sys.stdout.write(f"\rProgress: {min(index+bs,total)}/{total}")
                 sys.stdout.flush()
                 
-                results = self.pipeline(comment =  cmts[index:index+bs])
+                results,aspect = self.pipeline(comment =  cmts[index:index+bs],aspect_analysis = aspect_analysis)
+                if aspect is not None:
+                    for asp in aspect:
+                        position = 0 if asp[1] == 'positive' else 1
+                        aspects[asp[0]][position] +=1
+                        
+                
                 label = 0
                 for o in results:
                     if o == 'positive':
@@ -129,18 +137,18 @@ class Reviews_CLS_System:
             #         'product', 'username', 'rating', 'comment'])
             # df.to_csv(f"./negative.csv",
             #         index=False, encoding="utf8")
-        return positive,negative,total,detail_info,raw_reviews,product_name
+        return positive,negative,total,detail_info,raw_reviews,product_name,aspects
         
-    def __call__(self,url):
-        positive,negative,total,detail_info,raw_reviews,product_name = self.get_data_and_predict_from_url(url)
-        
+    def __call__(self,url,aspect_analysis):
+        positive,negative,total,detail_info,raw_reviews,product_name,aspects = self.get_data_and_predict_from_url(url,aspect_analysis)
         return {
             'positive':positive,
             'negative':negative,
             'total':total,
             # 'detail_info':detail_info,
             # 'raw_reviews':raw_reviews,
-            'product_name':product_name
+            'product_name':product_name,
+            'aspects':aspects
         }
 
 

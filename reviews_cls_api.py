@@ -7,7 +7,7 @@ import json
 from pydantic import BaseModel
 
 app = FastAPI()
-system = Reviews_CLS_System(device = 'cuda:1')
+system = Reviews_CLS_System(device = 'cuda:0',device1 = 'cuda:1',device2 = 'cuda:0',bs = 4)
 
 app.add_middleware(
     CORSMiddleware,
@@ -19,6 +19,7 @@ app.add_middleware(
 
 class ItemUrl(BaseModel):
     url: str
+    aspect_analysis: bool = False
 
 @app.get('/')
 def root():
@@ -27,4 +28,4 @@ def root():
 
 @app.post("/reviews_classification/")
 async def classify_reviews(item: ItemUrl):
-    return system(item.url)
+    return system(item.url,item.aspect_analysis)
