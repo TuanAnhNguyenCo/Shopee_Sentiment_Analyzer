@@ -1,14 +1,58 @@
+// const resultDiv = document.getElementById("result");
+// resultDiv.innerHTML = `
+//                   <p>Tên sản phẩm: test</p>
+//                   <p>Số lượng bình luận tích cực: ${10} / ${13}</p>
+//                   <p>Số lượng bình luận tiêu cực: ${3} / ${13}</p>
+//               `;
+// const fakeAspect = {
+//   test1: [0, 2],
+//   test2: [3, 4],
+//   test3: [6, 9],
+// };
+// const aspectResultDiv = document.getElementById("aspect-result");
+// aspectResultDiv.innerHTML = `<div class="grid-item">Tên khía cạnh</div><div class="grid-item">Số lượng đánh giá tích cực</div><div class="grid-item">Số lượng đánh giá tiêu cực</div>`;
+// document.getElementById("show-aspect-result").style.display = "block";
+// for (let key in fakeAspect) {
+//   if (fakeAspect.hasOwnProperty(key)) {
+//     const aspectKeyElement = document.createElement("div");
+//     const aspectPositiveElement = document.createElement("div");
+//     const aspectNegativeElement = document.createElement("div");
+//     aspectKeyElement.className = "grid-item";
+//     aspectKeyElement.textContent = `${key}`;
+//     aspectPositiveElement.className = "grid-item";
+//     aspectPositiveElement.textContent = `${fakeAspect[key][0]}`;
+//     aspectNegativeElement.className = "grid-item";
+//     aspectNegativeElement.textContent = `${fakeAspect[key][1]}`;
+//     aspectResultDiv.appendChild(aspectKeyElement);
+//     aspectResultDiv.appendChild(aspectPositiveElement);
+//     aspectResultDiv.appendChild(aspectNegativeElement);
+//   }
+// }
+document
+  .getElementById("show-aspect-result")
+  .addEventListener("click", function () {
+    if (document.getElementById("aspect-result").style.display === "grid") {
+      document.getElementById("aspect-result").style.display = "none";
+      document.getElementById("show-aspect-result").textContent =
+        "Hiển thị phân tích khía cạnh";
+    } else {
+      document.getElementById("show-aspect-result").textContent =
+        "Tắt hiển thị phân tích khía cạnh";
+      document.getElementById("aspect-result").style.display = "grid";
+    }
+  });
 document.getElementById("submitBtn").addEventListener("click", function () {
   const url = document.getElementById("urlInput").value;
+  const aspect = document.getElementById("aspect").checked;
   if (url) {
     document.getElementById("loading").style.display = "block"; // Show the loading animation
-
+    document.getElementById("show-aspect-result").style.display = "none";
     fetch("http://222.252.4.232:9999/reviews_classification", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ url: url }),
+      body: JSON.stringify({ url: url, aspect_analysis: aspect }),
     })
       .then((response) => {
         if (!response.ok) {
@@ -19,13 +63,33 @@ document.getElementById("submitBtn").addEventListener("click", function () {
       .then((data) => {
         document.getElementById("submitBtn").disabled = false;
         document.getElementById("loading").style.display = "none"; // Hide the loading animation
-
         const resultDiv = document.getElementById("result");
         resultDiv.innerHTML = `
                   <p>Tên sản phẩm: ${data.product_name}</p>
                   <p>Số lượng bình luận tích cực: ${data.positive} / ${data.total}</p>
                   <p>Số lượng bình luận tiêu cực: ${data.negative} / ${data.total}</p>
               `;
+        if (aspect) {
+          document.getElementById("show-aspect-result").style.display = "block";
+          const aspectResultDiv = document.getElementById("aspect-result");
+          aspectResultDiv.innerHTML = `<div class="grid-item">Tên khía cạnh</div><div class="grid-item">Số lượng đánh giá tích cực</div><div class="grid-item">Số lượng đánh giá tiêu cực</div>`;
+          for (let key in data.aspects) {
+            if (data.aspects.hasOwnProperty(key)) {
+              const aspectKeyElement = document.createElement("div");
+              const aspectPositiveElement = document.createElement("div");
+              const aspectNegativeElement = document.createElement("div");
+              aspectKeyElement.className = "grid-item";
+              aspectKeyElement.textContent = `${key}`;
+              aspectPositiveElement.className = "grid-item";
+              aspectPositiveElement.textContent = `${data.aspects[key][0]}`;
+              aspectNegativeElement.className = "grid-item";
+              aspectNegativeElement.textContent = `${data.aspects[key][1]}`;
+              aspectResultDiv.appendChild(aspectKeyElement);
+              aspectResultDiv.appendChild(aspectPositiveElement);
+              aspectResultDiv.appendChild(aspectNegativeElement);
+            }
+          }
+        }
 
         // Calculate the ratio and display the appropriate gif
         const ratio = (data.positive / data.negative) * 100;

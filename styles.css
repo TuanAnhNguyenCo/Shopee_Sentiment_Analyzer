@@ -47,12 +47,16 @@ main {
   margin-right: 10px;
 }
 
-#submitBtn {
+button {
   padding: 10px 20px;
   background-color: var(--back-ground-color);
   color: white;
   border: none;
   cursor: pointer;
+}
+
+#show-aspect-result {
+  margin: auto;
 }
 
 #submitBtn:hover {
@@ -69,13 +73,6 @@ main {
 #result {
   margin-top: 20px;
   font-size: 16px;
-}
-.positive {
-  color: green;
-}
-
-.negative {
-  color: red;
 }
 
 #spinner {
@@ -212,4 +209,18 @@ main {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+
+#aspect-result {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.grid-item {
+  background-color: #f1f1f1;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

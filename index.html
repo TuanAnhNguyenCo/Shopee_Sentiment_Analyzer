@@ -1,30 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Submit URL</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
 
-<body>
+  <body>
     <header>
-        <h1>Hệ thống phân loại bình luận đánh giá sản phẩm trên Shopee</h1>
+      <h1>Hệ thống phân loại bình luận đánh giá sản phẩm trên Shopee</h1>
     </header>
     <main>
-        <div class="container">
-            <input type="text" id="urlInput" placeholder="Nhập đường dẫn...">
-            <button id="submitBtn">Submit</button>
-            <div id="loading" style="display: none;">
-                <img src="https://64.media.tumblr.com/92f6247be1643aa708e2256e1d87effe/433316af1bf8e97a-dd/s500x750/337001a7acc19c48dff9057da112821fd5c8d91f.gifv"
-                    alt="Loading..." width="450px" height="auto">
-            </div>
-            <div id="character"></div>
-            <div id="result"></div>
+      <div class="container">
+        <input type="text" id="urlInput" placeholder="Nhập đường dẫn..." />
+        <button id="submitBtn">Submit</button>
+        <label>
+          <input type="checkbox" id="aspect" />
+          Phân tích khía cạnh
+        </label>
+        <div id="loading" style="display: none">
+          <img
+            src="https://64.media.tumblr.com/92f6247be1643aa708e2256e1d87effe/433316af1bf8e97a-dd/s500x750/337001a7acc19c48dff9057da112821fd5c8d91f.gifv"
+            alt="Loading..."
+            width="450px"
+            height="auto"
+          />
         </div>
+        <div id="character"></div>
+        <div id="result"></div>
+        <button type="checkbox" id="show-aspect-result" style="display: none">
+          Hiển thị phân tích khía cạnh
+        </button>
+        <div id="aspect-result"></div>
+      </div>
     </main>
     <script src="script.js"></script>
-</body>
-
+  </body>
 </html>
