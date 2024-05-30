@@ -2,6 +2,7 @@ from transformers import BertModel,BertTokenizer
 from torch import nn
 import torch
 from huggingface_hub import PyTorchModelHubMixin
+import os
 
 class ReviewsClassification(nn.Module,PyTorchModelHubMixin):
     def __init__(self,n_classes = 2):
@@ -47,17 +48,32 @@ class ABSABert(nn.Module,PyTorchModelHubMixin):
     
 class ReviewsClassificationInference:
     def __init__(self,device = 'cpu',device1 = 'cpu',device2 = 'cpu'):
-        self.model = ReviewsClassification.from_pretrained("NCTuanAnh/shopee_reviews_cls_no_product_name").to(device)
+        if not os.path.exists('weights'):
+            self.model = ReviewsClassification.from_pretrained("NCTuanAnh/shopee_reviews_cls_no_product_name").to(device)
+        else:
+            self.model = ReviewsClassification()
+            self.model.load_state_dict(torch.load('weights/shopee_reviews_cls_no_product_name.pth',map_location = 'cpu'),strict = False)
+            
+            self.model.to(device)
         self.model.eval()
         self.tokenizer = BertTokenizer.from_pretrained('bert-base-multilingual-cased')
         self.idx_to_class = {
             0:'positive',
             1:'negative'
         }
-        self.aspect_extraction_model = ABTEBert.from_pretrained('NCTuanAnh/Aspect_Based_Term_Extraction_for_Reviews').to(device1)
+        if not os.path.exists('weights'):
+            self.aspect_extraction_model = ABTEBert.from_pretrained('NCTuanAnh/Aspect_Based_Term_Extraction_for_Reviews').to(device1)
+        else:
+            self.aspect_extraction_model = ABTEBert()
+            self.aspect_extraction_model.load_state_dict(torch.load('weights/Aspect_Based_Term_Extraction_for_Reviews.pth',map_location = 'cpu'),strict = False)
+            self.aspect_extraction_model.to(device1)
         self.aspect_extraction_model.eval()
-        
-        self.aspect_sentiment_analysis_model = ABSABert.from_pretrained('NCTuanAnh/Aspect_Based_Sentiment_Analysis_for_Reviews').to(device2)
+        if not os.path.exists('weights'):
+            self.aspect_sentiment_analysis_model = ABSABert.from_pretrained('NCTuanAnh/Aspect_Based_Sentiment_Analysis_for_Reviews').to(device2)
+        else:
+            self.aspect_sentiment_analysis_model = ABSABert()
+            self.aspect_sentiment_analysis_model.load_state_dict(torch.load('weights/Aspect_Based_Sentiment_Analysis_for_Reviews.pth',map_location = 'cpu'),strict = False)
+            self.aspect_sentiment_analysis_model.to(device2)
         self.aspect_sentiment_analysis_model.eval()
         self.device = device
         self.device1 = device1

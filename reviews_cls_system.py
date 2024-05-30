@@ -33,7 +33,8 @@ headers = {
 
 
 class Reviews_CLS_System:
-    def __init__(self,device = 'cuda:1',device1 = 'cuda:0',device2 = 'cuda:1',bs = 4):
+    def __init__(self,device = 'cpu',device1 = 'cpu',device2 = 'cpu',bs = 4):
+
         self.bs = bs
         self.clean = CleanData(
             abbreviation_words_file_url='specialchar.txt', save_dir='./')
