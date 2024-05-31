@@ -6,4 +6,5 @@
 # Cách chạy
 - Sửa device trong file reviews_cls_api.py (cuda or cpu)
 - Chạy hệ thống: ```gunicorn reviews_cls_api:app --bind 0.0.0.0:9999 --worker-class uvicorn.workers.UvicornWorker --timeout 300 ```
+- Mở file script.js và đổi đường dẫn ở hàm fetch() 
 - Mở file index.html và chạy live server để chạy giao diện
