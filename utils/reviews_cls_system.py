@@ -3,7 +3,7 @@ import json
 import requests
 import pandas as pd
 from tqdm.auto import tqdm
-from clean_data import CleanData
+from utils.clean_data import CleanData
 import requests
 import sys
 from model.model import ReviewsClassificationInference
@@ -37,7 +37,7 @@ class Reviews_CLS_System:
 
         self.bs = bs
         self.clean = CleanData(
-            abbreviation_words_file_url='specialchar.txt', save_dir='./')
+            abbreviation_words_file_url='utils/specialchar.txt', save_dir='./')
         self.pipeline = ReviewsClassificationInference(device,device1,device2)
 
     def get_rating_urls(self, url):
@@ -94,6 +94,7 @@ class Reviews_CLS_System:
                         
         
         except Exception as ex:
+            print(ex)
             pass
         print('*'*15,"CRAWLING REVIEWS: DONE!",'*'*15)
         print('*'*15,"PREDICTING REVIEWS: STARTING!",'*'*15)

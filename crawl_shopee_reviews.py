@@ -3,7 +3,7 @@ import json
 import requests
 import pandas as pd
 from tqdm.auto import tqdm
-from clean_data import CleanData
+from utils.clean_data import CleanData
 
 # khi chạy code cần login shopee lấy cookies thay vào phần cookie
 # truy cập link https://shopee.vn/api/v2/item/get_ratings?filter=0&flag=1&itemid=11424337247&limit=20&offset=0&shopid=39682649&type=0
@@ -32,7 +32,7 @@ class Crawl_Shopee_Review:
         self.data = []
         self.save_dir = save_dir
         self.clean = CleanData(
-            abbreviation_words_file_url='specialchar.txt', save_dir='./')
+            abbreviation_words_file_url='utils/specialchar.txt', save_dir='./')
 
     def get_rating_urls(self, url):
         r = re.search(r"i\.(\d+)\.(\d+)", url)

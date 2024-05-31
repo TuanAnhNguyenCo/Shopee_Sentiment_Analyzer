@@ -52,7 +52,7 @@ document.getElementById("submitBtn").addEventListener("click", function () {
     document.getElementById("show-aspect-result").style.display = "none";
     
     // fetch("http://222.252.4.232:9999/reviews_classification", {
-    fetch("https://sole-becoming-collie.ngrok-free.app/reviews_classification", {
+    fetch("http://0.0.0.0:9999/reviews_classification", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

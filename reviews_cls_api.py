@@ -1,13 +1,13 @@
 from fastapi import FastAPI, File, UploadFile, Request
 from secrets import token_hex
-from reviews_cls_system import Reviews_CLS_System
+from utils.reviews_cls_system import Reviews_CLS_System
 import requests 
 from fastapi.middleware.cors import CORSMiddleware
 import json
 from pydantic import BaseModel
 
 app = FastAPI()
-system = Reviews_CLS_System(device = 'cuda:0',device1 = 'cuda:1',device2 = 'cuda:0',bs = 16)
+system = Reviews_CLS_System(device = 'cpu',device1 = 'cpu',device2 = 'cpu',bs = 16)
 
 app.add_middleware(
     CORSMiddleware,

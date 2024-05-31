@@ -58,7 +58,3 @@ class CleanData:
                       index=False, encoding="utf8")
     
     
-
-
-clean = CleanData(abbreviation_words_file_url = 'specialchar.txt',save_dir = './')
-clean.clean_csv('raw_reviews.csv')
