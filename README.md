@@ -1,9 +1,9 @@
-# Reviews_classification
+# Thư mục:
+- data: Nơi chứa dữ liệu để huấn luyện mô hình
+- model: Nơi chưa mô hình cho hệ thống và các file .ipynb để huấn luyện mô hình đó
+- utils: Gồm các file cần thiết để chạy hệ thống
 
-- Run python3 merge_csv_files.py to merge all files into one
-- Run python3 filter_reviews.py to filter low and high rating
-- Run python3 crawl_shopee_reviews.py to crawl reviews from shopee
-
-# Run model api
-- cd API
-- gunicorn reviews_cls_api:app --bind 0.0.0.0:9999 --worker-class uvicorn.workers.UvicornWorker --timeout 300
+# Cách chạy
+- Sửa device trong file reviews_cls_api.py (cuda or cpu)
+- Chạy hệ thống: ```gunicorn reviews_cls_api:app --bind 0.0.0.0:9999 --worker-class uvicorn.workers.UvicornWorker --timeout 300 ```
+- Mở file index.html và chạy live server để chạy giao diện
