@@ -1,4 +1,6 @@
 pandas
 requests
 tqdm
-selenium==4.9
+transformers
+gunicorn
+uvicorn
