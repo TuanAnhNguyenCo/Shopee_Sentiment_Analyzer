@@ -1,3 +1,29 @@
+hậu_xử_lý = [
+  "chất lượng",
+  "mô tả",
+  "đóng gói",
+  "hình",
+  "form",
+  "màu sắc",
+  "màu",
+  "mùi",
+  "sản phẩm",
+  "giá",
+  "tính năng",
+  "dịch vụ",
+  "chất liệu",
+  "kích thước",
+  "size",
+];
+const check = (str) => {
+  let check_ = false;
+  hậu_xử_lý.forEach((cur) => {
+    if (cur === str) {
+      check_ = true;
+    }
+  });
+  return check_;
+};
 document
   .getElementById("show-aspect-result")
   .addEventListener("click", function () {
@@ -52,20 +78,22 @@ document.getElementById("submitBtn").addEventListener("click", function () {
           const aspectResultDiv = document.getElementById("aspect-result");
           aspectResultDiv.innerHTML = `<div class="grid-item">Tên khía cạnh</div><div class="grid-item">Số lượng đánh giá tích cực</div><div class="grid-item">Số lượng đánh giá tiêu cực</div>`;
           for (let key in data.aspects) {
-            if (data.aspects.hasOwnProperty(key)) {
-              const aspectKeyElement = document.createElement("div");
-              const aspectPositiveElement = document.createElement("div");
-              const aspectNegativeElement = document.createElement("div");
-              aspectKeyElement.className = "grid-item";
-              aspectKeyElement.textContent = `${key}`;
-              aspectPositiveElement.className = "grid-item";
-              aspectPositiveElement.textContent = `${data.aspects[key][0]}`;
-              aspectNegativeElement.className = "grid-item";
-              aspectNegativeElement.textContent = `${data.aspects[key][1]}`;
-              aspectResultDiv.appendChild(aspectKeyElement);
-              aspectResultDiv.appendChild(aspectPositiveElement);
-              aspectResultDiv.appendChild(aspectNegativeElement);
-            }
+            console.log(key);
+            if (check(key))
+              if (data.aspects.hasOwnProperty(key)) {
+                const aspectKeyElement = document.createElement("div");
+                const aspectPositiveElement = document.createElement("div");
+                const aspectNegativeElement = document.createElement("div");
+                aspectKeyElement.className = "grid-item";
+                aspectKeyElement.textContent = `${key}`;
+                aspectPositiveElement.className = "grid-item";
+                aspectPositiveElement.textContent = `${data.aspects[key][0]}`;
+                aspectNegativeElement.className = "grid-item";
+                aspectNegativeElement.textContent = `${data.aspects[key][1]}`;
+                aspectResultDiv.appendChild(aspectKeyElement);
+                aspectResultDiv.appendChild(aspectPositiveElement);
+                aspectResultDiv.appendChild(aspectNegativeElement);
+              }
           }
         }
 
