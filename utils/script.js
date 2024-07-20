@@ -1,4 +1,4 @@
-hậu_xử_lý = [
+aspect_tags = [
   "chất lượng",
   "mô tả",
   "đóng gói",
@@ -17,7 +17,7 @@ hậu_xử_lý = [
 ];
 const check = (str) => {
   let check_ = false;
-  hậu_xử_lý.forEach((cur) => {
+  aspect_tags.forEach((cur) => {
     if (cur === str) {
       check_ = true;
     }
@@ -49,7 +49,7 @@ document.getElementById("submitBtn").addEventListener("click", function () {
 
     // fetch("http://222.252.4.232:9999/reviews_classification", {
     //fetch("http://0.0.0.0:9999/reviews_classification", {
-    fetch("http://222.252.4.92:9091/reviews_classification", {
+    fetch("http://0.0.0.0:9789/reviews_classification", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

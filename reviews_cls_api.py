@@ -7,7 +7,7 @@ import json
 from pydantic import BaseModel
 
 app = FastAPI()
-system = Reviews_CLS_System(device = 'cpu',device1 = 'cpu',device2 = 'cpu',bs = 16)
+system = Reviews_CLS_System(device = 'cuda:0',device1 = 'cuda:0',device2 = 'cuda:0',bs = 16)
 
 app.add_middleware(
     CORSMiddleware,
