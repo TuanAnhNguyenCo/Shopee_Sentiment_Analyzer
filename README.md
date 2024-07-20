@@ -1,5 +1,5 @@
 # Introduction
-<p>In this project, we have built a system that automatically crawls reviews for a product from a URL provided by the user and analyzes those reviews. Specifically, our system has two functions:  </p>
+<p>In this project, we have built a system that automatically crawls shopee reviews for a product from a URL provided by the user and analyzes those reviews. Specifically, our system has two functions:  </p>
 <ul>
   <li>Our system classifies reviews into two categories (positive or negative) and shows statistics on how many reviews were classified as positive and negative.  </li>
   <li>Our system extracts aspects from reviews and then classifies each aspect as positive or negative, showing statistics on the number of positive and negative mentions for each aspect. </li>
